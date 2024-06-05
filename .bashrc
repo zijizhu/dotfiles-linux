@@ -24,6 +24,9 @@ if [ -d ~/.bashrc.d ]; then
 fi
 unset rc
 
+# go
+export PATH=$PATH:/usr/local/go/bin
+
 # cargo
 . "$HOME/.cargo/env"
 
