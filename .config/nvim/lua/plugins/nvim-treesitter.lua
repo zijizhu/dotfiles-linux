@@ -14,7 +14,9 @@ return {
         "sql",
         "yaml",
         "json",
-        "go"
+        "go",
+        "markdown",
+        "markdown_inline"
       },
      sync_install = false,
      highlight = { enable = true },
