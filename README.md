@@ -1,4 +1,4 @@
-# .dotfiles
+# dotfiles
 
 This repo contains a bunch of dotfiles for various programs. They are managed by [GNU stow](https://www.gnu.org/software/stow/).
 
@@ -12,3 +12,7 @@ This includes the config files for:
 
 As well as the `.bashrc`, `.zshrc` files.
 
+Usage:
+```bash
+stow --dotfiles .
+```
