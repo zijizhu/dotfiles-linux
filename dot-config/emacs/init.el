@@ -18,24 +18,30 @@
 ;; Set up use-package
 (require 'use-package)
 (setq use-package-always-ensure t)
- 
- 
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; General customizations ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
  
 (use-package emacs
   :init
- 
-  ;; Enforce horizontal split
-  ;; (setq split-height-threshold nil)
-  ;; (setq split-width-threshold 0)
- 
+  ;; On macOS, bind the Command key to Meta 
+  (setq mac-option-key-is-meta nil
+	mac-command-key-is-meta t
+	mac-command-modifier 'meta
+	mac-option-modifier 'none)
+  
   ;; Enable indentation+completion using the TAB key.
   (setq tab-always-indent 'complete)
   (setq read-extended-command-predicate #'command-completion-default-include-p)
  
   ;; Tweak backup settings
+  (if (not (file-directory-p "~/.backups"))
+      (make-directory "~/.backups"))
+  (if (not (file-directory-p "~/.auto-saves"))
+      (make-directory "~/.auto-saves"))
+
   (setq
    backup-by-copying t       ; don't clobber symlinks
    backup-directory-alist
@@ -76,13 +82,16 @@
   (scroll-bar-mode -1)
   (tool-bar-mode -1)
   (tooltip-mode -1)
-  (set-fringe-mode 10)
+  (set-fringe-mode 0)
   (menu-bar-mode -1)
-  (fringe-mode 12)
   (global-display-line-numbers-mode)
  
   ;; Auto-close brackets
   (electric-pair-mode)
+  (add-function :before-until
+		electric-pair-inhibit-predicate
+		(lambda
+		  (c) (eq c ?<)))
  
   ;; Maximize frame on start-up
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
@@ -90,7 +99,9 @@
   ; Make macos title bar transparent
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
   ;; Set font face
-  (set-face-attribute 'default nil :font "PragmataPro Mono" :height 140)
+  (set-face-attribute 'default nil :font "Source Code Pro" :height 130)
+  (set-face-attribute 'variable-pitch nil :family "PragmataPro Liga" :height 130)
+  (set-face-attribute 'fixed-pitch nil :font "Source Code Pro" :height 130)
  
   ;; Config built-in tree-sitter
   ;; blog: https://www.masteringemacs.org/article/how-to-get-started-tree-sitter
@@ -113,58 +124,7 @@
   (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
   (add-to-list 'major-mode-remap-alist '(json-mode . json-ts-mode))
   (setq treesit-font-lock-level 4))
- 
- 
-;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Use $PATH from shell ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;
- 
-;; (use-package exec-path-from-shell
-;;   :config
-;;   (when (memq window-system '(mac ns x))
-;;     (exec-path-from-shell-initialize)))
- 
-;; (when (memq window-system '(mac ns x))
-;;   (exec-path-from-shell-initialize))
-;; (when (daemonp)
-;;   (exec-path-from-shell-initialize))
- 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Use evil key bindings ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;
- 
-(use-package evil
-  :ensure t
-  :init
-  (setq evil-want-integration t)
-  (setq evil-want-keybinding nil)
-  (setq evil-want-C-u-scroll t)
-  (setq evil-respect-visual-line-mode t)
-  :config
-  (evil-mode 1)
-  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
- 
-  ;; Set evil keybindings
-  (evil-set-leader nil (kbd "SPC"))
-  (evil-define-key 'normal 'global (kbd "<leader>s") 'save-buffer)
-  (evil-define-key 'normal 'global (kbd "<leader>d") 'dired)
-  (evil-define-key 'normal 'global (kbd "<leader>b") 'consult-buffer)
-  (evil-define-key 'normal 'global (kbd "<leader>g") 'magit)
-  (evil-define-key 'normal 'global (kbd "<leader>c") 'comment-region)
- 
-  (evil-define-key 'normal 'global (kbd "<leader>w") 'split-window-right)
-  (evil-define-key 'normal 'global (kbd "<leader>x") 'delete-window)
-  (evil-define-key 'normal 'global (kbd "<leader>h") 'windmove-left)
-  (evil-define-key 'normal 'global (kbd "<leader>j") 'windmove-down)
-  (evil-define-key 'normal 'global (kbd "<leader>k") 'windmove-up)
-  (evil-define-key 'normal 'global (kbd "<leader>l") 'windmove-right))
- 
-(use-package evil-collection
-  :after evil
-  :ensure t
-  :config
-  (evil-collection-init))
- 
+
 (use-package which-key)
  
  
@@ -172,43 +132,61 @@
 ;; Load themes, icon packs and modeline theme ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
  
-(use-package ef-themes
+(use-package modus-themes
+  :custom
+  (modus-themes-mixed-fonts t)
   :config
-  (setq ef-themes-to-toggle '(ef-cyprus ef-elea-dark))
- 
-  ;; Default weight is `bold'
-  (setq ef-themes-headings
-	'((0 1.9)
-	  (1 1.8)
-	  (2 regular 1.7)
-	  (3 regular 1.6)
-	  (4 regular 1.5)
-	  (5 1.4)
-	  (6 1.3)
-	  (7 1.2)
-	  (t 1.1)))
-  (setq ef-themes-mixed-fonts t)
- 
-  ;; Disable all other themes to avoid awkward blending:
-  (mapc #'disable-theme custom-enabled-themes)
- 
-  ;; Load the theme of choice:
-  (load-theme 'ef-cyprus :no-confirm))
+  (load-theme 'modus-vivendi :no-confirm))
  
 (use-package nerd-icons
   :custom
   (nerd-icons-font-family "Symbols Nerd Font Mono")
   :config
   (setq nerd-icons-scale-factor 1.1))
- 
-(use-package doom-modeline
-  :ensure t
-  :init
-  (doom-modeline-mode 1)
-  :custom
-  (doom-modeline-height 40))
- 
- 
+
+(use-package spaceline-config
+  :ensure powerline
+  :load-path "spaceline"
+  :config
+  (setq powerline-default-separator "wave")
+  (setq powerline-height 25)
+  (spaceline-spacemacs-theme))
+
+(use-package ligature
+  :config
+  (ligature-set-ligatures 'org-mode '("[ERROR]" "[DEBUG]" "[INFO]" "[WARN]" "[WARNING]"
+				      "[ERR]" "[FATAL]" "[TRACE]" "[FIXME]" "[TODO]"
+				      "[BUG]" "[NOTE]" "[HACK]" "[MARK]"
+				      "# ERROR" "# DEBUG" "# INFO" "# WARN" "# WARNING"
+				      "# ERR" "# FATAL" "# TRACE" "# FIXME" "# TODO"
+				      "# BUG" "# NOTE" "# HACK" "# MARK"
+				      "// ERROR" "// DEBUG" "// INFO" "// WARN" "// WARNING"
+				      "// ERR" "// FATAL" "// TRACE" "// FIXME" "// TODO"
+				      "// BUG" "// NOTE" "// HACK" "// MARK"
+				      "!!" "!=" "!==" "!!!" "!≡" "!≡≡" "!>" "!=<" "#("
+				      "#_" "#{" "#?" "#>" "##" "#_(" "%=" "%>" "%>%" "%<%"
+				      "&%" "&&" "&*" "&+" "&-" "&/" "&=" "&&&" "&>" "$>"
+				      "***" "*=" "*/" "*>" "++" "+++" "+=" "+>" "++=" "--"
+				      "-<" "-<<" "-=" "->" "->>" "---" "-->" "-+-" "-\\/"
+				      "-|>" "-<|" ".." "..." "..<" ".>" ".~" ".=" "/*" "//"
+				      "/>" "/=" "/==" "///" "/**" ":::" "::" ":=" ":≡" ":>"
+				      ":=>" ":(" ":-(" ":)" ":-)" ":/" ":\\" ":3" ":D" ":P"
+				      ":>:" ":<:" "<$>" "<*" "<*>" "<+>" "<-" "<<" "<<<" "<<="
+				      "<=" "<=>" "<>" "<|>" "<<-" "<|" "<=<" "<~" "<~~" "<<~"
+				      "<$" "<+" "<!>" "<@>" "<#>" "<%>" "<^>" "<&>" "<?>" "<.>"
+				      "</>" "<\\>" "<\">" "<:>" "<~>" "<**>" "<<^" "<!" "<@"
+				      "<#" "<%" "<^" "<&" "<?" "<." "</" "<\\" "<\"" "<:" "<->"
+				      "<!--" "<--" "<~<" "<==>" "<|-" "<<|" "<-<" "<-->" "<<=="
+				      "<==" "=<<" "==" "===" "==>" "=>" "=~" "=>>" "=/=" "=~="
+				      "==>>" "≡≡" "≡≡≡" "≡:≡" ">-" ">=" ">>" ">>-" ">>=" ">>>"
+				      ">=>" ">>^" ">>|" ">!=" ">->" "??" "?~" "?=" "?>" "???"
+				      "?." "^=" "^." "^?" "^.." "^<<" "^>>" "^>" "\\\\" "\\>"
+				      "\\/-" "@>" "|=" "||" "|>" "|||" "|+|" "|->" "|-->" "|=>"
+				      "|==>" "|>-" "|<<" "||>" "|>>" "|-" "||-" "~=" "~>" "~~>"
+				      "~>>" "[[" "]]" "\">" "_|_"))
+  (global-ligature-mode t))
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Command completion with vertico and consult ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -230,7 +208,13 @@
   :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
  
 (use-package consult)
- 
+
+(use-package orderless
+  :ensure t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
+
  
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Setup code completion with corfu ;;
@@ -241,8 +225,20 @@
   (global-corfu-mode)
   :custom
   (corfu-auto-delay 0.2))
+
+(use-package cape
+  :bind ("C-c p" . cape-prefix-map) ;; Alternative keys: M-p, M-+, ...
+  :init
+  (add-hook 'completion-at-point-functions #'cape-dabbrev)
+  (add-hook 'completion-at-point-functions #'cape-file)
+)
  
- 
+(use-package yasnippet
+  :config
+  (setq yas-snippet-dirs '("~/.config/emacs/snippets"))
+  (yas-global-mode))
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; git management with magit ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -267,31 +263,36 @@
 ;;;;;;;;;;;;;;;;;;;;;
 ;; Config org-mode ;;
 ;;;;;;;;;;;;;;;;;;;;;
- 
-(defun org-buffer-face-mode-function ()
-  (interactive)
-  (setq buffer-face-mode-face '(:family "Iosevka Nerd Font" :height 130))
-  (buffer-face-mode))
- 
+
 (use-package olivetti
-  :config
-  (add-hook 'org-mode-hook #'olivetti-mode)
-  (add-hook 'org-mode-hook #'flyspell-mode)
-  (add-hook 'org-mode-hook #'visual-line-mode)
-  (add-hook 'org-mode-hook 'org-buffer-face-mode-function)
   :custom
-  (olivetti-body-width 108)
+  (olivetti-body-width 0.6)
   :config
-  (setq org-startup-indented t))
- 
- 
-;; Python specific packages: jupyter and its dependency zmq
-;; (use-package zmq)
-;; (use-package jupyter)
- 
-;; envrc: integrating direnv and pyenv
-;; (use-package envrc)
-;; (envrc-global-mode)
+  (add-hook 'org-mode-hook
+	    (lambda ()
+	      (variable-pitch-mode)
+	      (olivetti-mode 1)
+	      (flyspell-mode 1)
+	      (visual-line-mode)
+	      (display-line-numbers-mode -1)
+	      ;; LaTeX formatting in Org Mode
+	      (setq org-format-latex-options (plist-put org-format-latex-options :background "Transparent"))
+	      (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.5))))
+  (setq org-startup-indented t)
+  (setq org-preview-latex-default-process 'dvisvgm))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Config env variables ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Emacs Plus has a feature that injects $PATH variable
+;; So this is not needed for $PATH, but still useful for other env vars
+(use-package exec-path-from-shell)
+(exec-path-from-shell-copy-env "LIBGS")
+
+(use-package envrc
+  :hook (after-init . envrc-global-mode))
  
 (setq custom-file "~/.config/emacs/custom.el")
 (load custom-file)

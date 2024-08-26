@@ -15,6 +15,12 @@ return {
         "yaml",
         "json",
         "go",
+        "tmux",
+        "typescript",
+        "javascript",
+        "gitignore",
+        "jsdoc",
+        "zig",
         "markdown",
         "markdown_inline"
       },

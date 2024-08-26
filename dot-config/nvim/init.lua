@@ -32,6 +32,7 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
     lazypath,
   })
 end
+
 vim.opt.rtp:prepend(lazypath)
 
 -- [[ Setup plugins ]]
@@ -39,5 +40,7 @@ require("lazy").setup("plugins")
 
 -- [[ Set theme ]]
 vim.g.moonflyItalics = false
-vim.cmd [[colorscheme moonfly]]
+vim.cmd("colorscheme gruvbox")
+
+vim.keymap.set('n', '<Leader>f', MiniFiles.open, {noremap = true})
 

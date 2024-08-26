@@ -9,7 +9,7 @@ return {
     "williamboman/mason-lspconfig.nvim",
     config = function()
       require("mason-lspconfig").setup({
-        ensure_installed = { "lua_ls", "bashls" }
+        ensure_installed = { "lua_ls", "bashls", "pylsp", "vtsls" }
       })
     end
   },
@@ -19,6 +19,20 @@ return {
       local lspconfig = require('lspconfig')
 
       -- [[ Language specific settings ]]
+      -- Python
+      require'lspconfig'.pylsp.setup({
+        settings = {
+          pylsp = {
+            plugins = {
+              pycodestyle = { ignore = {'W391'}, maxLineLength = 100 }
+            }
+          }
+        }
+      })
+
+      -- TypeScript/JavaScript
+      require'lspconfig'.vtsls.setup{}
+
       -- Lua
       lspconfig.lua_ls.setup({
         on_init = function(client)
