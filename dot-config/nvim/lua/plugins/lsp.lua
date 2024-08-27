@@ -31,7 +31,7 @@ return {
       })
 
       -- TypeScript/JavaScript
-      require'lspconfig'.vtsls.setup{}
+      require'lspconfig'.vtsls.setup({})
 
       -- Lua
       lspconfig.lua_ls.setup({
