@@ -1,16 +1,20 @@
 -- [[ A minimal configuration modified from https://github.com/nvim-lua/kickstart.nvim/blob/master/init.lua ]]
 -- [[ Essential keymaps ]]
 -- Set <space> as the leader key.
-
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Remap some keys
 vim.cmd [[nnoremap H ^]]
 vim.cmd [[nnoremap L $]]
+vim.cmd [[xnoremap H ^]]
+vim.cmd [[xnoremap L $]]
 
 -- Sync clipboard between OS and Neovim.
 vim.opt.clipboard = 'unnamedplus'
+
+-- https://stackoverflow.com/q/916875/17662217
+vim.cmd [[noremap <Leader>p :let @+=expand("%")<CR>]]
 
 vim.o.tabstop = 2 -- size of a hard tabstop (ts).
 vim.o.shiftwidth = 2 -- size of an indentation (sw).
@@ -37,10 +41,3 @@ vim.opt.rtp:prepend(lazypath)
 
 -- [[ Setup plugins ]]
 require("lazy").setup("plugins")
-
--- [[ Set theme ]]
-vim.g.moonflyItalics = false
-vim.cmd("colorscheme gruvbox")
-
-vim.keymap.set('n', '<Leader>f', MiniFiles.open, {noremap = true})
-

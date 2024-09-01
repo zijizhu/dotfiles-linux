@@ -24,14 +24,15 @@ return {
         settings = {
           pylsp = {
             plugins = {
-              pycodestyle = { ignore = {'W391'}, maxLineLength = 100 }
+              pycodestyle = { ignore = {}, maxLineLength = 150 }
             }
           }
         }
       })
 
       -- TypeScript/JavaScript
-      require'lspconfig'.vtsls.setup({})
+      require('lspconfig').vtsls.setup({})
+      require('lspconfig').bashls.setup({})
 
       -- Lua
       lspconfig.lua_ls.setup({

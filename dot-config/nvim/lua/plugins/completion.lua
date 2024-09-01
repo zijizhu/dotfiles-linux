@@ -6,11 +6,13 @@ return {
     'hrsh7th/cmp-buffer',
     'hrsh7th/cmp-path',
     'saadparwaiz1/cmp_luasnip',
-    'onsails/lspkind.nvim'
+    'onsails/lspkind.nvim',
+    "micangl/cmp-vimtex"
   },
   config = function()
     local cmp = require('cmp')
     local lspkind = require('lspkind')
+    require('cmp_vimtex').setup()
 
     cmp.setup({
       snippet = {
@@ -32,9 +34,11 @@ return {
       }),
       sources = cmp.config.sources({
         { name = 'nvim_lsp' },
-        { name = 'luasnip' }, -- For luasnip users.
+        { name = 'luasnip' },
+        { name = 'vimtex' },
       }, {
         { name = 'buffer' },
+        { name = 'path' }
       }),
       formatting = {
         format = lspkind.cmp_format({
@@ -46,8 +50,7 @@ return {
             buffer = "[Buffer]",
             nvim_lsp = "[LSP]",
             luasnip = "[LuaSnip]",
-            nvim_lua = "[Lua]",
-            latex_symbols = "[Latex]",
+            vimtex = "[VimTex]"
           })
         })
       }
