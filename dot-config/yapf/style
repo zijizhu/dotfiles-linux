@@ -1,0 +1,10 @@
+# vim:ft=conf
+
+[style]
+based_on_style = google
+spaces_before_comment = 2
+
+arithmetic_precedence_indication = true
+coalesce_brackets = true
+column_limit = 108
+dedent_closing_brackets = true
