@@ -93,15 +93,16 @@
 		(lambda
 		  (c) (eq c ?<)))
  
-  ;; Maximize frame on start-up
-  (add-to-list 'default-frame-alist '(fullscreen . maximized))
- 
+  (add-to-list 'default-frame-alist '(width  . 160))
+  (add-to-list 'default-frame-alist '(height . 60))
+  (add-to-list 'default-frame-alist '(left . 60))
+  (add-to-list 'default-frame-alist '(top . 60))
   ; Make macos title bar transparent
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
   ;; Set font face
-  (set-face-attribute 'default nil :font "Source Code Pro" :height 130)
-  (set-face-attribute 'variable-pitch nil :family "PragmataPro Liga" :height 130)
-  (set-face-attribute 'fixed-pitch nil :font "Source Code Pro" :height 130)
+  (set-face-attribute 'default nil :font "PragmataPro Mono" :height 130)
+  (set-face-attribute 'variable-pitch nil :family "PragmataPro Mono" :height 130)
+  (set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :height 130)
  
   ;; Config built-in tree-sitter
   ;; blog: https://www.masteringemacs.org/article/how-to-get-started-tree-sitter
@@ -118,7 +119,7 @@
   ;; Enable tree-sitter for various languages
   ;; AucTex package utilizes variable major-mode-remap-alist
   ;; So we must use add-to-list instead of setq to not break AucTex
-  (add-to-list 'major-mode-remap-alist '(elisp-mode . elisp-ts-mode))
+  ;; (add-to-list 'major-mode-remap-alist '(elisp-mode . elisp-ts-mode))
   (add-to-list 'major-mode-remap-alist '(yaml-mode . yaml-ts-mode))
   (add-to-list 'major-mode-remap-alist '(bash-mode . bash-ts-mode))
   (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
@@ -131,6 +132,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Load themes, icon packs and modeline theme ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package hl-todo
+  :ensure t
+  :config
+  (global-hl-todo-mode))
  
 (use-package modus-themes
   :custom
@@ -144,47 +150,16 @@
   :config
   (setq nerd-icons-scale-factor 1.1))
 
-(use-package spaceline-config
-  :ensure powerline
-  :load-path "spaceline"
-  :config
-  (setq powerline-default-separator "wave")
-  (setq powerline-height 25)
-  (spaceline-spacemacs-theme))
-
-(use-package ligature
-  :config
-  (ligature-set-ligatures 'org-mode '("[ERROR]" "[DEBUG]" "[INFO]" "[WARN]" "[WARNING]"
-				      "[ERR]" "[FATAL]" "[TRACE]" "[FIXME]" "[TODO]"
-				      "[BUG]" "[NOTE]" "[HACK]" "[MARK]"
-				      "# ERROR" "# DEBUG" "# INFO" "# WARN" "# WARNING"
-				      "# ERR" "# FATAL" "# TRACE" "# FIXME" "# TODO"
-				      "# BUG" "# NOTE" "# HACK" "# MARK"
-				      "// ERROR" "// DEBUG" "// INFO" "// WARN" "// WARNING"
-				      "// ERR" "// FATAL" "// TRACE" "// FIXME" "// TODO"
-				      "// BUG" "// NOTE" "// HACK" "// MARK"
-				      "!!" "!=" "!==" "!!!" "!≡" "!≡≡" "!>" "!=<" "#("
-				      "#_" "#{" "#?" "#>" "##" "#_(" "%=" "%>" "%>%" "%<%"
-				      "&%" "&&" "&*" "&+" "&-" "&/" "&=" "&&&" "&>" "$>"
-				      "***" "*=" "*/" "*>" "++" "+++" "+=" "+>" "++=" "--"
-				      "-<" "-<<" "-=" "->" "->>" "---" "-->" "-+-" "-\\/"
-				      "-|>" "-<|" ".." "..." "..<" ".>" ".~" ".=" "/*" "//"
-				      "/>" "/=" "/==" "///" "/**" ":::" "::" ":=" ":≡" ":>"
-				      ":=>" ":(" ":-(" ":)" ":-)" ":/" ":\\" ":3" ":D" ":P"
-				      ":>:" ":<:" "<$>" "<*" "<*>" "<+>" "<-" "<<" "<<<" "<<="
-				      "<=" "<=>" "<>" "<|>" "<<-" "<|" "<=<" "<~" "<~~" "<<~"
-				      "<$" "<+" "<!>" "<@>" "<#>" "<%>" "<^>" "<&>" "<?>" "<.>"
-				      "</>" "<\\>" "<\">" "<:>" "<~>" "<**>" "<<^" "<!" "<@"
-				      "<#" "<%" "<^" "<&" "<?" "<." "</" "<\\" "<\"" "<:" "<->"
-				      "<!--" "<--" "<~<" "<==>" "<|-" "<<|" "<-<" "<-->" "<<=="
-				      "<==" "=<<" "==" "===" "==>" "=>" "=~" "=>>" "=/=" "=~="
-				      "==>>" "≡≡" "≡≡≡" "≡:≡" ">-" ">=" ">>" ">>-" ">>=" ">>>"
-				      ">=>" ">>^" ">>|" ">!=" ">->" "??" "?~" "?=" "?>" "???"
-				      "?." "^=" "^." "^?" "^.." "^<<" "^>>" "^>" "\\\\" "\\>"
-				      "\\/-" "@>" "|=" "||" "|>" "|||" "|+|" "|->" "|-->" "|=>"
-				      "|==>" "|>-" "|<<" "||>" "|>>" "|-" "||-" "~=" "~>" "~~>"
-				      "~>>" "[[" "]]" "\">" "_|_"))
-  (global-ligature-mode t))
+;; Uncomment the following region to enable spaceline
+;; Requires .el files from https://github.com/TheBB/spaceline
+;; (use-package spaceline-config
+;;   :ensure powerline
+;;   :ensure s
+;;   :load-path "spaceline"
+;;   :config
+;;   (setq powerline-default-separator "wave")
+;;   (setq powerline-height 25)
+;;   (spaceline-spacemacs-theme))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -209,10 +184,25 @@
  
 (use-package consult)
 
+;; Enable rich annotations using the Marginalia package
+(use-package marginalia
+  ;; Bind `marginalia-cycle' locally in the minibuffer.  To make the binding
+  ;; available in the *Completions* buffer, add it to the
+  ;; `completion-list-mode-map'.
+  :bind (:map minibuffer-local-map
+         ("M-A" . marginalia-cycle))
+  ;; The :init section is always executed.
+  :init
+  ;; Marginalia must be activated in the :init section of use-package such that
+  ;; the mode gets enabled right away. Note that this forces loading the
+  ;; package.
+  (marginalia-mode))
+
 (use-package orderless
   :ensure t
   :custom
   (completion-styles '(orderless basic))
+  (orderless-matching-styles '(orderless-regexp orderless-flex))
   (completion-category-overrides '((file (styles basic partial-completion)))))
 
  
@@ -252,10 +242,14 @@
  
 (use-package tex
   :ensure auctex
+  :ensure adaptive-wrap
   :config
   (setq TeX-auto-save t)
   (setq TeX-parse-self t)
+  (setq LaTeX-item-indent 0)
   (setq-default TeX-master nil)
+  (setq-default adaptive-wrap-extra-indent 0)
+  (add-hook 'LaTeX-mode-hook #'adaptive-wrap-prefix-mode)
   (add-hook 'LaTeX-mode-hook #'flyspell-mode)
   (add-hook 'LaTeX-mode-hook #'visual-line-mode))
  
@@ -266,7 +260,7 @@
 
 (use-package olivetti
   :custom
-  (olivetti-body-width 0.6)
+  (olivetti-body-width 0.75)
   :config
   (add-hook 'org-mode-hook
 	    (lambda ()

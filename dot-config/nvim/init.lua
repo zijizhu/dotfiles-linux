@@ -4,6 +4,9 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+vim.opt.guicursor = 'n-v-sm:block-Cursor,c-i-ci-ve:block'
+vim.keymap.set({ 'n', 'x' }, 's', '<Nop>')
+
 -- Remap some keys
 vim.cmd [[nnoremap H ^]]
 vim.cmd [[nnoremap L $]]
@@ -23,6 +26,8 @@ vim.o.softtabstop = 2 -- number of spaces a <Tab> counts for. When 0, feature is
 
 vim.o.pumheight = 10 -- limit popup height
 vim.o.number = true -- display line number
+
+vim.o.relativenumber = true
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"

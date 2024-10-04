@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: multifile-doc-file-vars
+# key: <mul
+# --
+%%% Local Variables: ***$0
+%%% mode:latex ***
+%%% TeX-master: "$1"  ***
+%%% reftex-default-bibliography: ("$2") ***
+%%% End: ***
