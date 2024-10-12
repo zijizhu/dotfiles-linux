@@ -100,9 +100,9 @@
   ; Make macos title bar transparent
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
   ;; Set font face
-  (set-face-attribute 'default nil :font "PragmataPro Mono" :height 130)
-  (set-face-attribute 'variable-pitch nil :family "PragmataPro Mono" :height 130)
-  (set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :height 130)
+  (set-face-attribute 'default nil :font "Iosevka" :height 120 :weight 'Medium)
+  (set-face-attribute 'variable-pitch nil :family "Iosevka" :height 120 :weight 'Medium)
+  (set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :height 120 :weight 'Medium)
  
   ;; Config built-in tree-sitter
   ;; blog: https://www.masteringemacs.org/article/how-to-get-started-tree-sitter
